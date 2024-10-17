@@ -1,8 +1,8 @@
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults"
 import { createSignerFromKeypair, signerIdentity, generateSigner, percentAmount } from "@metaplex-foundation/umi"
-import { createNft, mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
+import { createNft, mplTokenMetadata, NotAllowedToChangeSellerFeeBasisPointsError } from "@metaplex-foundation/mpl-token-metadata";
 
-import wallet from "../wba-wallet.json"
+import wallet from "../Turbin3-wallet.json"
 import base58 from "bs58";
 
 const RPC_ENDPOINT = "https://api.devnet.solana.com";
@@ -16,11 +16,17 @@ umi.use(mplTokenMetadata())
 const mint = generateSigner(umi);
 
 (async () => {
-    // let tx = ???
-    // let result = await tx.sendAndConfirm(umi);
-    // const signature = base58.encode(result.signature);
+     let tx = createNft(umi,{
+        mint,
+        name: "dTok sing Rug",
+        symbol: "dTokSR",
+        uri: "https://devnet.irys.xyz/BS8bjULAQf9sVAxyWJbpvgS8Ri25WYK1t8Fi57FTwVbe",
+        sellerFeeBasisPoints: percentAmount(1) 
+     }) 
+     let result = await tx.sendAndConfirm(umi);
+     const signature = base58.encode(result.signature);
     
-    // console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
+     console.log(`Succesfully Minted! Check out your TX here:\nhttps://explorer.solana.com/tx/${signature}?cluster=devnet`)
 
     console.log("Mint Address: ", mint.publicKey);
 })();
